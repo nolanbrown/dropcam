@@ -2,6 +2,9 @@
 
 RubyGem to access Dropcam account and Camera including direct live stream access
 
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/nolanbrown/dropcam)
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
