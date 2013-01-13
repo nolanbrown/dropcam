@@ -1,5 +1,3 @@
-require 'hpricot'
-
 require_relative 'base'
 require_relative 'error'
 require_relative 'notification'
