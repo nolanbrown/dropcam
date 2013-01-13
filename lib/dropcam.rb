@@ -21,45 +21,35 @@ module Dropcam
     
     def get_public_camera(token)
       response = get(::CAMERAS_GET_BY_PUBLIC_TOKEN, {"token"=>token, "return_deleted"=>true}, @session.cookies)      
-      if response.success?
-        return response.body
-      elsif response.not_authorized?
-        raise AuthorizationError 
-      else 
-        raise CameraNotFoundError 
-      end
+      camera = JSON.parse(response.body)["items"][0]
+      Camera.new(camera["uuid"], camera)
     end
     
     def public_cameras      
       response = get(::CAMERAS_GET_PUBLIC, {}, @session.cookies)
-      cameras = []
-      if response.success?
-        response_json = JSON.parse(response.body)
-        owned = response_json["items"][0]["owned"]
-        owned.each{|camera|
-          c = Camera.new(camera["uuid"], camera)
-          c.cookies = @session.cookies
-          c.session_token = @session.session_token
-          cameras.push(c)
-        }
-      end
-      return cameras
+      public_cameras = JSON.parse(response.body)["items"]
+      json_to_camera(public_cameras)
     end
     
     def cameras      
       response = get(::CAMERAS_GET_VISIBLE, {"group_cameras" => true}, @session.cookies)
-      cameras = []
-      if response.success?
-        response_json = JSON.parse(response.body)
-        owned = response_json["items"][0]["owned"]
-        owned.each{|camera|
-          c = Camera.new(camera["uuid"], camera)
-          c.cookies = @session.cookies
-          c.session_token = @session.session_token
-          cameras.push(c)
-        }
-      end
-      return cameras
+      response_json = JSON.parse(response.body)
+      owned = response_json["items"][0]["owned"]
+      json_to_camera(owned, true)
     end
+    
+    private
+    def json_to_camera(json, set_session=true)
+      cameras = []
+      
+      json.each{|camera|
+        c = Camera.new(camera["uuid"], camera)
+        c.cookies = @session.cookies if set_session
+        c.session_token = @session.session_token if set_session
+        cameras.push(c)
+      }
+      cameras
+    end
+    
   end
 end

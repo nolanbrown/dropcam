@@ -32,6 +32,7 @@ module Dropcam
     
     def settings=(new_settings)
       @settings = {}
+      return @settings unless new_settings
       new_settings.each{|key,value|
         @settings[key] = Setting.new(key, value, self)
       }
