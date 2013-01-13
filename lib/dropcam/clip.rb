@@ -1,11 +1,13 @@
+require_relative 'clip_base'
+
 module Dropcam
-  class Clip
+  class Clip < ClipBase    
     attr_reader :id, :public_link, :description, :title, :is_error, :start_time, :server, :camera_id, :generated_time
     attr_reader :filename, :length_in_seconds
     
     attr_accessor :properties
     def initialize(camera, properties = nil)
-      @camera = camera
+      super(camera)
       self.properties = properties
     end
     
@@ -15,6 +17,18 @@ module Dropcam
       }
       @properties = properties
     end
+        
+    # def title=(title)
+    #   return false unless @id
+    #   response = post(::CLIP_DELETE, { "id" => @id, "title" => title }, @camera.cookies)      
+    #   true
+    # end
+    
+    def destroy
+      return false unless @id
+      response = post(::CLIP_DELETE, { "id" => @id }, @camera.cookies)      
+      true
+    end
     
     def direct_link
       return "https://#{@server}/#{@filename}"
@@ -22,31 +36,5 @@ module Dropcam
     def direct_screenshot_link
       return "https://#{@server}/s3#{File.basename(@filename, File.extname(@filename))}.jpg"
     end
-
-    def set_title(title)
-      return false unless @id
-      response = post(::CLIP_DELETE, { "id" => @id, "title" => title }, @cookies)      
-      if response.success?
-        return true
-      elsif response.not_authorized?
-        raise AuthorizationError 
-      else 
-        raise CameraNotFoundError 
-      end
-      
-    end
-    
-    def delete
-      return false unless @id
-      response = post(::CLIP_DELETE, { "id" => @id }, @cookies)      
-      if response.success?
-        return true
-      elsif response.not_authorized?
-        raise AuthorizationError 
-      else 
-        raise CameraNotFoundError 
-      end
-    end
-    
   end
 end

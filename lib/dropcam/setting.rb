@@ -1,7 +1,7 @@
 module Dropcam
   class Setting < Base
     # 
-    attr_accessor :name
+    attr_accessor :name, :camera
     def initialize(name, value, camera)
       @camera = camera
       @name = name
@@ -21,17 +21,9 @@ module Dropcam
     
     def set(value)
       response = post(::DROPCAMS_SET_PROPERTY, {"uuid"=>@camera.uuid, "key" => @name, "value" => value}, @camera.cookies)     
-      if response.success?
-        @current_value = value
-        @camera.settings = JSON.parse(response.body)["items"][0]
-        true
-      elsif response.error?
-        raise UnkownError, JSON.parse(response.body)["status_detail"]
-      elsif response.not_authorized?
-        raise AuthorizationError 
-      else 
-        raise CameraNotFoundError 
-      end
+      @current_value = value
+      @camera.settings = JSON.parse(response.body)["items"][0]
+      true
     end
     
   end

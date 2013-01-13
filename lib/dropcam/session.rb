@@ -15,7 +15,7 @@ module Dropcam
       all_cookies = response.get_fields('set-cookie') # only cookies are set on valid credentials
       
       ## for some reason, dropcam responds with 200 on invalid credentials
-      if response.success? and all_cookies
+      if all_cookies
         
         cookies = []
         all_cookies.each { | cookie |
@@ -35,12 +35,8 @@ module Dropcam
     protected
     def _session_token
       response = get(::USERS_GET_SESSION_TOKEN, {}, @cookies)
-      if response.success?
-        response_json = JSON.parse(response.body)
-        token = response_json["items"][0]
-        return token
-      end
-      return nil
+      token = JSON.parse(response.body)["items"][0]
+      token
     end
 
   end

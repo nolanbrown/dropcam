@@ -74,8 +74,19 @@ module Dropcam
       request.add_field("Cookie",cookies.join('; ')) if cookies
 
       response = http.request(request)
+            
+      if response.success?
+        return response
+      elsif response.not_authorized?
+        raise AuthorizationError 
+      elsif response.error?
+        message = "Unkown Error"
+        message = JSON.parse(response.body)["status_detail"] if JSON.parse(response.body)["status_detail"]
+        raise UnkownError, message
+      else 
+        raise CameraNotFoundError 
+      end
       
-      return response
     end
     
     def get(path, parameters,cookies, use_nexus=false)
@@ -88,7 +99,13 @@ module Dropcam
       request.add_field("Cookie",cookies.join('; ')) if cookies
             
       response = http.request(request)
-      return response
+      if response.success?
+        return response
+      elsif response.not_authorized?
+        raise AuthorizationError 
+      else 
+        raise CameraNotFoundError 
+      end
     end
     
     def delete(path, parameters,cookies, use_nexus=false)
@@ -101,7 +118,13 @@ module Dropcam
       request.add_field("Cookie",cookies.join('; ')) if cookies
             
       response = http.request(request)
-      return response
+      if response.success?
+        return response.body ## returns a zip
+      elsif response.not_authorized?
+        raise AuthorizationError 
+      else 
+        raise CameraNotFoundError 
+      end
     end
     
     protected
