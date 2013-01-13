@@ -27,7 +27,7 @@ Or install it yourself as:
 	camera = dropcam.cameras.first
 	
 	# returns jpg image data of the latest frame captured
-	screenshot = camera.current_image
+	screenshot = camera.screenshot.current
 	
 	# write data to disk
 	File.open("#{camera.title}.jpg", 'w') {|f| f.write(screenshot) }
