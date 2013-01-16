@@ -15,7 +15,7 @@ module Dropcam
       c = Camera.new(uuid)
       c.cookies = @session.cookies
       c.session_token = @session.session_token
-      c.properties = c.info      
+      c.update_info
       c
     end
     
