@@ -26,11 +26,11 @@ module Dropcam
     
     ::NEXUS_API_BASE = "https://nexusapi.dropcam.com/"
     
-    ::NEXUS_GET_IMAGE_PATH = "get_image" # uuid and width
-    ::NEXUS_GET_AVAILABLE_PATH = "get_available" # start_time and uuid
-    ::NEXUS_GET_CUEPOINT_PATH = "get_cuepoint" # start_time_uuid
-    ::NEXUS_GET_EVENT_CLIP_PATH = "get_event_clip" # start_time_uuid
-    ::NEXUS_GET_REVERSE_PAGINATED_CUEPOINTS_PATH = "get_reverse_paginated_cuepoint"
+    ::NEXUS_GET_IMAGE_PATH = "/get_image" # uuid and width
+    ::NEXUS_GET_AVAILABLE_PATH = "/get_available" # start_time and uuid
+    ::NEXUS_GET_CUEPOINT_PATH = "/get_cuepoint" # start_time_uuid
+    ::NEXUS_GET_EVENT_CLIP_PATH = "/get_event_clip" # start_time_uuid
+    ::NEXUS_GET_REVERSE_PAGINATED_CUEPOINTS_PATH = "/get_reverse_paginated_cuepoint"
     ::API_BASE = "https://www.dropcam.com"
     ::API_PATH = "/api/v1"
     
@@ -91,13 +91,13 @@ module Dropcam
     
     def get(path, parameters,cookies, use_nexus=false)
       http = _dropcam_http(use_nexus)
-            
+
       query_path = "#{path}"
       query_path = "#{path}?#{URI.encode_www_form(parameters)}" if parameters.length > 0
       request = Net::HTTP::Get.new(query_path)      
       
       request.add_field("Cookie",cookies.join('; ')) if cookies
-            
+      
       response = http.request(request)
       if response.success?
         return response
