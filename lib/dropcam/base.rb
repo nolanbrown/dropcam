@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'json'
+require 'openssl'
 
 module Net
   class HTTPResponse
