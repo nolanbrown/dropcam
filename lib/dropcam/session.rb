@@ -23,20 +23,11 @@ module Dropcam
         }
         
         @cookies = cookies
-        @session_token = _session_token # this value is embedded in the cookie but leaving this as is incase the API changes
+        @session_token = JSON.parse(response.body)["items"][0]["session_token"]
         
       else
         raise AuthenticationError, "Invalid Credentials"
       end      
-    end
-        
-        
-    
-    protected
-    def _session_token
-      response = get(::USERS_GET_SESSION_TOKEN, {}, @cookies)
-      token = JSON.parse(response.body)["items"][0]
-      token
     end
 
   end
