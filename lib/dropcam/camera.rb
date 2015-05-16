@@ -12,7 +12,7 @@ require_relative 'screenshot'
 module Dropcam
   class Camera < Base
     
-    attr_reader :uuid, :notification_devices, :download_host, :download_server_live, :is_streaming, :title, :public_token
+    attr_reader :uuid, :notification_devices, :download_host, :download_server_live, :is_streaming, :name, :public_token
     attr_reader :description, :timezone_utc_offset, :timezone, :is_connected, :is_online, :is_public, :hours_of_recording_max
     attr_reader :type, :id, :owner_id
     attr_accessor :settings
